@@ -1,0 +1,72 @@
+CREATE TABLE:
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+create external table video(
+	video_id string,
+	uploader string,
+	interval_est_upl int,
+	category string,
+	length int,
+	no_views int,
+	rating float,
+	no_rating int,
+	no_comment int,
+	related_video array<string>
+	)
+	row format delimited fields terminated by '\t' lines terminated by '\n' stored as textfile location'/assignments/youtube/'; 
+
+
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+QUERIES
+
+1.  Find out the top 5 categories with maximum number of videos uploaded.
+
+--- select category from video group by category order by count(video_id) desc limit 5;
+
+RESULT:
+
+Entertainment
+Music
+Comedy
+People & Blogs
+News & Politics
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+2. Find out the top 10 rated videos.
+
+--- select video_id from video order by rating desc limit 10;
+
+RESULT:
+
+geUY_esOrt0
+osqnkdc349s
+wzUyV42Izz4
+dh6dF1XY3uI
+L3mR8syHNIg
+YZev1imoxX8
+gP0jnBrVEpI
+Y_hAXbgxXp8
+lD3GuCoJxT4
+3TYqkBJ9YRk
+Time taken: 18.268 seconds, Fetched: 10 row(s)
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+3. Find out the most viewed videos.
+
+---select video_id,no_views from video order by no_views desc limit 1;
+
+RESULT:
+12Z3J1uzd0Q	65341925
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+

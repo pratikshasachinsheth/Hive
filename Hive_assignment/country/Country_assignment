@@ -1,0 +1,225 @@
+TBALE CREATION:
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ 
+create external table flag(
+	name string,
+	landmass int,
+	zone int,
+	area int,
+	population int,
+	language int,
+	religion int,
+	bar int,
+	strips int,
+	color int,
+	red int,
+	green int,
+	blue int,
+	gold int,
+	white int,
+	black int,
+	orange int,
+	mainhue string,
+	circle int,
+	crosses int,
+	saltire int,
+	quarter int,
+	sunstar int,
+	crescent int,
+	triangle int,
+	icon int,
+	animate int,
+	text int,
+	topleft string,
+	botright string
+	) 
+	row format delimited fields terminated by ',' location'/assignments/flag/';
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+QUERIES:
+
+1.Count number of countries based on landmass.
+
+--- select landmass,count(name) from country group by landmass;
+RESULT:
+1	31
+2	17
+3	35
+4	52
+5	39
+6	20
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+2.Find out top 5 country with Sum of bars and strips in a flag.
+
+--- select name from flag order by (bar+strips) desc limit 5;
+ 
+RESULT:
+
+Malaysia
+USA
+Liberia
+Uruguay
+Greece
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+3.Count of countries with icon.
+
+--- select count(name) from flag where icon=1;
+
+RESULT:
+ 49
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+4.Count of countries which have same top left and top right color in flag.
+
+---select count(name) from flag where topleft=botright;
+
+RESULT:
+76
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+5.Count number of countries based on zone.
+
+--- select zone,count(name) from flag group by zone;
+
+RESULT:
+
+1	91
+2	29
+3	16
+4	58
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+6.Find out largest county in terms of area in NE zone.
+
+---  select name from flag where area = (select max(area) from flag where zone=1);
+
+RESULT:
+USSR
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+7.Find out least populated country in S.America landmass.
+
+FOR MAX:
+
+----select name from flag where population=(select min(population) from flag where landmass=2);
+
+RESULT:
+
+brazil
+
+FOR MIN:
+
+------ select name from flag where population=(select min(population) from flag where landmass=2);
+
+RESULT:
+
+American-Samoa
+Andorra
+Anguilla
+Antigua-Barbuda
+Bahamas
+Bahrain
+Barbados
+Belize
+Bermuda
+British-Virgin-Isles
+Brunei
+Cape-Verde-Islands
+Cayman-Islands
+Comorro-Islands
+Cook-Islands
+Djibouti
+Dominica
+Equatorial-Guinea
+Faeroes
+Falklands-Malvinas
+French-Guiana
+French-Polynesia
+Gibraltar
+Greenland
+Grenada
+Guam
+Iceland
+Kiribati
+Liechtenstein
+Luxembourg
+Maldive-Islands
+Malta
+Marianas
+Micronesia
+Monaco
+Montserrat
+Nauru
+Netherlands-Antilles
+Niue
+Qatar
+San-Marino
+Sao-Tome
+Seychelles
+Soloman-Islands
+St-Helena
+St-Kitts-Nevis
+St-Lucia
+St-Vincent
+Surinam
+Tonga
+Turks-Cocos-Islands
+Tuvalu
+US-Virgin-Isles
+Vanuatu
+Vatican-City
+Western-Samoa
+Time taken: 62.147 seconds, Fetched: 56 row(s)
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+8. Find out largest speaking language among all countries.
+
+---select language from flag group by language order by count(language) desc limit 1;
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+RESULT: 10
+
+9.Find most common colour among flags from all countries.
+
+--- select mainhue from flag group by mainhue order by count(mainhue) desc limit 1;
+
+RESULT:
+
+red
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+10.Sum of all circles present in all country flags.
+
+---select sum(circle) from flag;
+
+RESULT:
+
+33
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+11.Count of countries which have both icon and text in flag.
+
+--- select count(name) from flag where icon=1 and text=1;
+
+RESULT:
+
+13
+
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------

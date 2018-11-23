@@ -1,0 +1,180 @@
+Table Creation:
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+1. USER TABLE
+
+create external table users(
+	userid int,
+	reputation int,
+	displayname string,
+	loc string,
+	age int
+	)
+	row format delimited fields terminated by ',' location '/assignments/stack/users/';
+
+.........................................................................................................................................................................................................................
+
+2 POSTTYPE TABLE
+
+create external table posttype(
+	post_type_id int, 
+	post_type_name string
+	)
+	row format delimited fields terminated by ',' location '/assignments/stack/posttype/';
+
+.........................................................................................................................................................................................................................
+
+3. POST TABLE
+
+ create external table post(
+	post_id int,
+	post_type int,
+	creationdate string,
+	score int,
+	viewcount int,
+	owneruserid int,
+	title string,
+	answercount int,
+	commentcoun int
+	)
+	row format delimited fields terminated by ',' location '/assignments/stack/posts/';
+
+.........................................................................................................................................................................................................................
+
+4.COMMENT TABLE
+
+create external table comment(
+	comment_id int,
+	userid int
+	)
+	row format delimited fields terminated by ',' location '/assignments/stack/comment/';
+
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+QUERIES:
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+1.Find the display name and no. of posts created by the user who has got maximum reputation.
+
+--- select users.displayname,count(post.post_id) from users join post on users.userid = post.owneruserid where users.reputation in(select reputation from users order by reputation desc limit 1) group by displayname;
+
+RESULT:
+
+Jon Skeet	1
+
+.........................................................................................................................................................................................................................
+
+
+2.Find the average age of users on the Stack Overflow site.
+
+--- select userid,distinct displayname from users where age=(select int(avg(age)) a from users);
+
+RESULT:
+
+Avearge age = 35
+
+.........................................................................................................................................................................................................................
+
+3.Find the display name of user who posted the oldest post on Stack Overflow (in terms of date).
+
+----select displayname from users where userid in(select owneruserid from post order by creationdate)limit 1;
+
+
+RESULT:
+
+Jeff Atwood
+
+
+.........................................................................................................................................................................................................................
+
+4.Find the display name and no. of comments done by the user who has got maximum
+reputation.
+
+---  select users.displayname,count(comment.comment_id) from users join comment on users.userid = post.userid where users.reputation in(select reputation from users order by reputation desc limit 1) group by displayname;
+
+RESULT:
+
+Jon Skeet  765
+
+.........................................................................................................................................................................................................................
+
+5.1.Find the display name of user who has created maximum no. of posts on Stack Overflow.
+
+
+---select displayname from users where userid = (select owneruserid from post group by owneruserid order by count(post_id) desc limit 1);
+
+RESULT:
+
+aku
+
+5.2. Find the display name of user who has comments maximum number of time on Stack Overflow
+
+---select displayname from users where userid = (select userid from comment group by userid order by count(comment_id) desc limit 1);
+
+RESULT:
+
+ Jon Skeet
+
+.........................................................................................................................................................................................................................
+
+6.Find the owner name and id of user whose post has got maximum no. of view counts so
+far.
+
+--- select userid,displayname from users where userid = (select owneruserid from post order by viewcount desc limit 1);
+
+RESULT:
+	244	Shadow_x99
+
+.........................................................................................................................................................................................................................
+
+
+7.1. Find the title and owner name of the post which has maximum no. of answer count
+
+---select users.displayname,post.title from users join post on users.userid = post.owneruserid where userid = (select owneruserid from post order by answercount desc limit 1);
+
+RESULT:
+
+Charles Roper	How to select the nth row in a SQL database table?
+....
+Time taken: 152.738 seconds, Fetched: 21 row(s)
+
+ 
+
+
+7.2. Find the title and owner name of post who has got maximum no. of Comment count
+
+--- select users.displayname,post.title from users join post on users.userid = post.owneruserid where userid=(select owneruserid from post order by commentcoun desc limit 1);
+
+RESULT:
+
+ Justin Standard	How do you express binary literals in Python?
+...
+Time taken: 155.604 seconds, Fetched: 43 row(s)
+
+.........................................................................................................................................................................................................................
+	
+8.Find the location which has maximum no of Stack Overflow users.
+
+---select COALESCE(loc)from users group by loc having loc!='' order by count(userid) desc;
+
+RESULT:
+
+ United States
+
+.........................................................................................................................................................................................................................
+
+9.Find the total no. of answers, posts, comments created by Indian users.
+
+--- select count(answercount) Total_Answer,count(post_id) Total_Post,count(commentcoun) Total_Comment from post where owneruserid in (select userid from users where loc like CONCAT('%','India', '%'));
+
+
+RESULT:
+	203	726	210
+
+
+.........................................................................................................................................................................................................................
+
